@@ -1,0 +1,767 @@
+<!--
+Name: Don Thomas
+date: 23 April 2020
+Purpose: Final Project
+-->
+
+<!DOCTYPE html>
+<html lang="en">
+
+<!-- head of html-->
+<head>
+    <!--meta tag-->
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link href="css/main.css" rel="stylesheet" type="text/css">
+
+    <!--title-->
+    <title>Online Website</title>
+</head>
+
+<!--body-->
+<body onload="fnDisplayItem(); fnCurrency();" id="C4">
+
+    <!--div for common-->
+    <div id="wrap">
+
+        <!--header-->
+        <header>
+        <h1>DJ Online Shipping</h1>
+        <!--button for the menu-->
+        <div class="menu">
+            <a href="#C4"> <input type="button" value="Shop" onclick=""  style="margin-top:-50px;" class="button" /></a>
+            <a href="#idCart"><input type="button" value="Your Cart" onclick="" class="button" /></a>
+            <a href="mailto:d_parappuramja117815@fanshaweonline.ca"><input type="button" value="Contact Us" class="button" onclick=""  style="margin-bottom: 10px;"/></a>
+            
+            
+       
+        </div>
+        </header>
+
+        <!--Image for the main-->
+    <image src="images/wallpaper2.jpg" width="60%" height="30%" class="imgtheme"/>
+
+    <!--time for the site -->
+    <p id="idTime" class="time">
+        time
+    <p>
+
+
+
+    <h2 class="h2Store">Store Items</h2>
+    <br>
+    <!--option for category and currency-->
+    <div class="option">
+        Categories
+        <select id="idFilter"  style="padding: 2px;" onchange="fnDisplayItem();">
+            <option>All</option>
+            <option>Shirts</option>
+            <option>Hoodies</option>
+            <option>Trousers</option>
+        </select>
+        Currency
+        <select id="idCurrency" style="padding: 2px; text-align: right;" onchange="fnCurrency(); fnDisplayItem(); fnCartCurrency();" >
+            <option>CAD</option>
+            <option>USD</option>
+
+        </select>
+    </div>
+    <!--div for display-->
+    <div class="item" id="idItem">
+        display items
+        <br><br><br>
+        
+    </div>
+    <br><br>
+    <!--area for the cart-->
+    <h2 class="yourCart">Your Cart</h2>
+    <div  class="cart" id="idCart">
+        Cart is empty...!
+        <br><br><br>
+    </div>
+
+    <!--area for edit-->
+    <div class="edit" id ="idEdit">
+
+    </div>
+
+    <!--area for price-->
+    <div class="price" id="idPrice">
+        Summary...!
+        <br>
+    </div>
+
+    <h2>Review our Products</h2>
+    
+    <!--footer-->
+    <footer>
+    <!--review the item-->
+    <div class="review">
+        Product ID :
+        <input type="text" id="idDetails" class="id" />
+        <p id="idNot"></p>
+        
+        <input type="button" value="See Item Details & Reviews for this Product >>" onclick="fnDetails();" style="font-weight: bold;" />
+        <br><br>
+        <select id="idStar" class="star">
+            <option>⭐⭐⭐⭐⭐</option>
+            <option>⭐⭐⭐⭐</option>
+            <option>⭐⭐⭐</option>
+            <option>⭐⭐</option>
+            <option>⭐</option>
+        </select>
+        <br>
+
+        <!-- area for review-->
+        <input type="textarea" id="idText" class="field" placeholder="Please review the Product...!"/>
+        <br>
+
+        <!--button foor submit & reset-->
+        <input type="button" value="Submit" onclick="fnSubmit();" style="margin-top: 10px;font-weight: bold;" />
+        <input type="button" value="Reset" onclick="fnReset();" style="margin-top: 10px;font-weight: bold;" />
+
+    </div>
+    </footer>
+
+
+    <script>
+
+        //array for item
+        var aData = [];
+        var aCart =[];
+        idPlus = 1;
+        var aCurrency =[];
+        var aQuantity = [];
+
+        //array for images
+        var aImage =["shirt1.jpeg", "shirt2.jpeg", "shirt3.jpeg","shirt4.jpeg","shirt5.jpeg",
+        "hoodie1.jpeg", "hoodie2.jpeg", "hoodie3.jpeg", "hoodie4.jpeg", "hoodie5.jpeg", 
+        "trouser1.jpeg", "trouser2.jpeg", "trouser3.jpeg","trouser4.jpeg", "trouser5.jpeg", "shirt6.jpeg", "hoodie6.jpeg", "trouser6.jpeg"];
+        console.log(aImage[0]+aImage[1]+aImage[2]);
+
+        //getting the current time
+        document.getElementById("idTime").innerHTML = new Date();
+
+        //constructor
+        function cData(id,nm,pr,qn,mx,cat,sh,rv,des,str,img)
+			{
+				this.id =id;
+				this.name = nm;
+				this.price = pr;
+				this.qty = qn;
+				this.maxPer = mx;
+                this.category = cat;
+                this.ship = sh;
+                this.review = rv;
+                this.description = des;
+                this.star = str;
+                this.image = img;
+
+			}
+            //constuctor calling
+            aData.push(new cData(fnId(),"White Shirt",10, 20,5, "Shirts", 10,"Good item","Full Sleeve","⭐⭐⭐⭐⭐", aImage[0]));
+            aData.push(new cData(fnId(),"Blue Hoodie",20, 25,5, "Hoodies", 10,"Good item","Full Sleeve","⭐⭐⭐⭐", aImage[5]));
+            aData.push(new cData(fnId(),"Brown Trouser",15, 25,5, "Trousers", 10,"Good item","Slim Fit","⭐⭐⭐", aImage[10]));
+            aData.push(new cData(fnId(),"Navy Blue Shirt",20, 30, 5, "Shirts", 10,"Good item", "Full Sleeve","⭐⭐⭐⭐", aImage[1]));
+            aData.push(new cData(fnId(),"Black Hoodie",23, 20,5, "Hoodies", 10,"Good item","Full Sleeve","⭐⭐⭐⭐", aImage[6]));
+            aData.push(new cData(fnId(),"Blue Trouser",20, 20,5, "Trousers", 10,"Good item","Slim Fit","⭐⭐⭐", aImage[11]));
+            aData.push(new cData(fnId(),"Check Shirt",50, 40, 5, "Shirts", 10,"Good item", "Full Sleeve","⭐⭐⭐", aImage[2]));
+            aData.push(new cData(fnId(),"Red hoodie",60, 30,5, "Hoodies", 10,"Good item","Full Sleeve","⭐⭐⭐⭐⭐", aImage[7]));
+            aData.push(new cData(fnId(),"Red Trouser",20, 20,5, "Trousers", 10,"Good item","Chino Fit","⭐⭐⭐⭐", aImage[12]));
+            aData.push(new cData(fnId(),"White Shirt",20, 20,5, "Shirts", 10,"Good item","Round Neck","⭐⭐⭐⭐⭐", aImage[3]));
+            aData.push(new cData(fnId(),"Orange Shirt",40, 30,5, "Shirts", 10,"Good item","Full Sleeve","⭐⭐⭐⭐", aImage[4]));
+            aData.push(new cData(fnId(),"Yellow Hoodie",30, 20,5, "Hoodies", 10,"Good item","Puma Hoodie","⭐⭐⭐⭐⭐", aImage[8]));
+            aData.push(new cData(fnId(),"Black Hoodie",40, 50,5, "Hoodies", 10,"Good item","Puma Hoodie","⭐⭐⭐⭐⭐", aImage[9]));
+            aData.push(new cData(fnId(),"Green Trouser",10, 20,5, "Trousers", 10,"Good item","Chino Fit","⭐⭐⭐⭐", aImage[13]));
+            aData.push(new cData(fnId(),"Grey Trouser",10, 20,5, "Trousers", 10,"Good item","Slim Fit","⭐⭐⭐", aImage[14]));
+            aData.push(new cData(fnId(),"Check Shirt",20, 20,5, "Shirts", 10,"Good item","Full Sleeve","⭐⭐⭐⭐⭐", aImage[15]));
+            aData.push(new cData(fnId(),"Black Hoodie",30, 20,5, "Hoodies", 10,"Good item","Full Sleeve","⭐⭐⭐⭐", aImage[16]));
+            aData.push(new cData(fnId(),"Green Trouser",40, 25,5, "Trousers", 10,"Good item","Slim Fit","⭐⭐⭐", aImage[17]));
+
+            console.log(aData[0]);
+            console.log(aData[1]);
+            console.log(aData[2]);
+
+            //copy the quantity value to new  Array
+            for(var i =0; i<aData.length; i++)
+            {
+                aQuantity[i] = aData[i].qty;
+            }
+            console.log(aQuantity + "quantity");
+
+            //fn for submit comment
+            function fnSubmit()
+            {
+                //console.log("in submit");
+                var count =0;
+                var idDetailsValue = document.getElementById("idDetails").value;
+                var idStarValue = document.getElementById("idStar").value;
+                var idTextValue = document.getElementById("idText").value;
+                var idCurrencyValue = document.getElementById("idCurrency").value;
+                console.log("in submit"+idDetailsValue);
+
+                //loop for finding the data from array
+                for (var i = 0; i<aData.length ; i++)
+                {
+                    if(aData[i].id == idDetailsValue)
+                    {
+                        console.log("in submit" +aData[i].review +" here");
+                        
+                        aData[i].review +="\n\n"+ idStarValue+"\n" +idTextValue;
+                        console.log(aData[i].review);
+
+                        //alert it
+                        
+                        alert("Item Details:\nProduct ID: "+ aData[i].id+ "\n Product Name: "+ aData[i].name
+                        + "\nPrice: " + aData[i].price + " "+ idCurrencyValue +"\nQuantity Available: "+ aData[i].qty
+                        + "\nMax Per Customer: " + aData[i].maxPer + "\nCost of Shipping: " + aData[i].ship +" "+idCurrencyValue
+                        + "\n\nDescription:\n" + aData[i].description +"\n\nReview:\n\n" + aData[i].star 
+                        + "\n"+aData[i].review);
+                        
+                        document.getElementById("idText").value ="";
+                        document.getElementById("idDetails").value = "";
+                        
+                        count++;
+
+                    }
+                }
+                if(count == 0)
+                {
+                    document.getElementById("idNot").innerHTML ="Please enter the Correct Product ID or Please enter a Review...!"; 
+                }
+                count=0;
+            }
+
+            //fn for reset
+            function fnReset()
+            {
+                document.getElementById("idDetails").value = "";
+                document.getElementById("idText").value  ="";
+                
+            }
+
+            //fn for description
+            function fnDetails()
+            {
+                var count = 0;
+                var idDetailsPath = document.getElementById("idDetails");
+                    
+
+                var idCurrencyValue = document.getElementById("idCurrency").value;
+
+                //loop
+                for(var i = 0; i<aData.length; i++)
+                {
+                    //condition for check the value
+                    if(aData[i].id == idDetailsPath.value)
+                    {
+                        alert("Item Details:\nProduct ID: "+ aData[i].id+ "\n Product Name: "+ aData[i].name
+                        + "\nPrice: " + aCurrency[i] + " "+ idCurrencyValue +"\nQuantity Available: "+ aData[i].qty
+                        + "\nMax Per Customer: " + aData[i].maxPer + "\nCost of Shipping: " + aData[i].ship +" "+idCurrencyValue
+                        + "\n\nDescription:\n" + aData[i].description +"\n\nReview:\n" + aData[i].star 
+                        + "\n"+aData[i].review);
+                        count++;
+                        idDetailsPath.value = "";
+                    }
+                    
+
+                } 
+                if(count == 0)
+                {
+                    document.getElementById("idNot").innerHTML ="No Data Found. Please enter the Correct Product ID...!";
+
+                }
+
+            }
+
+
+            //fn for fn price
+            function fnPrice()
+            {
+                var total = 0;
+                var shipping = 0;
+                var idPriceLocation = document.getElementById("idPrice");
+                idPriceLocation.innerHTML = "";
+
+                var idCurrencyValue = document.getElementById("idCurrency").value;
+
+                //create new elements
+                var nwP1 = document.createElement("p");
+                var nwP2 = document.createElement("p");
+                var nwP3 = document.createElement("p");
+                var nwButton = document.createElement("button");
+
+                //loop for getting all data
+                for(var i = 0; i<aCart.length; i++)
+                {
+                    total = total + aCart[i].subTotal;
+                    
+
+                }
+                //shipping cost
+                shipping = shipping + aCart.length*10;
+
+                var subtotal = total+shipping;
+                var tax = subtotal*.13;
+                var orderTotal = subtotal * 1.13;
+
+                //display to innertext
+                nwP1.innerText = "Summary";
+                nwP2.innerText = "Items SubTotal: " + total.toFixed(2)+" "+idCurrencyValue 
+                + "\nEstimated Shipping: " + shipping.toFixed(2)+" "+idCurrencyValue
+                + "\n\nSubTotal: " + subtotal.toFixed(2)+" "+idCurrencyValue
+                + "\nEstimated Tax: " + tax.toFixed(2)+" "+idCurrencyValue;
+                 
+                nwP3.innerText = "Order Total: " + orderTotal.toFixed(2)+" "+idCurrencyValue;
+                nwButton.innerText = "Proceed to Checkout >>";
+
+                //style to new element
+                nwP1.style.cssText ="font-weight:bolder;text-align:center;font-size: 140%;";
+                nwP2.style.cssText ="padding-left:10%;";
+                nwP3.style.cssText ="padding-left:10%;font-weight:bold;";
+                nwButton.style.cssText ="margin-left:10%; margin-bottom:2%;font-weight: bold;";
+                
+                //add new element to the price location
+                idPriceLocation.appendChild(nwP1);
+                idPriceLocation.appendChild(nwP2);
+                idPriceLocation.appendChild(nwP3);
+                idPriceLocation.appendChild(nwButton);
+                
+
+
+                //idPriceLocation.innerHTML="summary";
+            }
+
+            //fn for currency
+            function fnCurrency()
+            {
+                //get the currency value
+                var idCurrencyValue = document.getElementById("idCurrency").value;
+                
+                //condition for conversion
+                if(idCurrencyValue == "CAD")
+                {
+
+                    //loop for all data
+                    for(var i = 0; i<aData.length;i++)
+                    {
+                        aCurrency[i] = (aData[i].price).toFixed(2);
+                    }
+                }
+                else if(idCurrencyValue =="USD")
+                {
+                    for(var i = 0; i<aData.length;i++)
+                    {
+                        aCurrency[i] = (aData[i].price/1.4).toFixed(2);
+                    }
+
+                }
+                
+            }
+
+            //fn for cart Currency;
+            function fnCartCurrency()
+            {
+                //get the value
+                var idCurrencyValue = document.getElementById("idCurrency").value;
+
+                //condition
+                if(idCurrencyValue == "CAD")
+                {
+                    //loop
+                    for(var i = 0; i<aCart.length;i++)
+                    {
+                        aCart[i].price = (aData[i].price).toFixed(2);
+                        aCart[i].subTotal = aCart[i].quantity * aCart[i].price;
+                    }
+                }
+                else if(idCurrencyValue =="USD")
+                {
+                    for(var i = 0; i<aCart.length;i++)
+                    {
+                        aCart[i].price = (aData[i].price/1.4).toFixed(2);
+                        aCart[i].subTotal = aCart[i].quantity * aCart[i].price;
+                    }
+
+                }
+                
+                //function calling
+                fnButton();
+            }
+
+            //fn for id
+            function fnId()
+            {
+                 var idValue ="IWD10000"+idPlus;
+                console.log(idValue);
+                idPlus++;
+                //return id 
+                return idValue;
+            }
+
+            // fn for display
+            function fnDisplayItem()
+            {
+                // location for display item
+                var idDivItem = document.getElementById("idItem");
+                idDivItem.innerHTML = "";
+
+                //get Value from filter 
+                var idFilterValue = document.getElementById("idFilter").value;
+
+                //get Value of currency filter
+                var idCurrencyValue = document.getElementById("idCurrency").value;
+
+     
+                // loop for get all data
+                for(var i =0; i<aData.length; i++)
+                {
+                    //console.log("vale"+ aCurrency[i]);
+                   
+                    if(idFilterValue == "All" || (idFilterValue == "Shirts" && aData[i].category =="Shirts") 
+                    || (idFilterValue == "Hoodies" && aData[i].category =="Hoodies") || (idFilterValue == "Trousers" && aData[i].category =="Trousers"))
+                    {
+
+                    //create element
+                    var nwDiv = i;
+                    //console.log(nwDiv);
+                    var nwPButton = aData[i].id;
+                    
+                    //creating new elements
+                    nwDiv = document.createElement("section");
+                    var nwPId =document.createElement("p");
+                    var nwPName =document.createElement("p");
+                    var nwPPrice =document.createElement("p");
+                    var nwPStock =document.createElement("p");
+                    var nwPMax =document.createElement("p");
+                    var nwPStar =document.createElement("p");
+                    nwPButton =document.createElement("p");
+                    var nwImg =document.createElement("img");
+
+                     var nwButton =document.createElement("button");
+                    var nwButtonReview =document.createElement("button");
+                    var nwBr = document.createElement("br");
+
+                    var imgText = aData[i].image;
+                    
+
+                    //adding data
+                    nwPId.innerText = "ID: "+  aData[i].id;
+                    nwPName.innerText = "Name: " + aData[i].name;
+                    nwPPrice.innerText = "Price: $" + aCurrency[i] + " "+ idCurrencyValue;
+                    nwPStock.innerText = "In-Stock: " + aData[i].qty;
+                    nwPMax.innerText = "Max item per Customer: " + aData[i].maxPer;
+                    nwPStar.innerText = "Rating: " + aData[i].star;
+                    nwImg.src = "images/" + aData[i].image;
+                    nwButton.innerText ="Add to Cart";
+                    nwButton.value = aData[i].id;
+
+                    //style to new element
+                    nwImg.style.cssText ="width:250px; align:center; padding:28px 66px; height:340px;";
+                    nwPId.style.cssText = " text-align:center;font-weight:bold; font-size: 20px; margin-top: -15px;";
+                    nwPName.style.cssText = "text-align:center; font-weight:bold; font-size: 20px; margin-top: -20px;";
+                    
+                    nwPPrice.style.cssText = "text-align:center; font-weight:bold; font-size: 20px; margin-top: -20px;";
+                    
+                    nwPStock.style.cssText = "text-align:center; font-weight:bold; font-size: 16px; margin-top: -17px;";
+                    nwPMax.style.cssText = "text-align:center; font-weight:bold; font-size: 16px; margin-top: -17px;";
+                    nwPStar.style.cssText = "text-align:center; font-weight:bold; font-size: 20px; margin-top: -15px; font-size: 15px;";
+                   
+                    nwButton.style.cssText ="text-align:center; width: 100px; height: 30px;background-color : #FFDC00; font-weight: bold; margin:0px 141px 15px";
+                    
+                    //button function 
+                    nwButton.onclick = function() {fnButton(this.value)};
+                    //add to div
+                    nwDiv.appendChild(nwImg);
+                    nwDiv.appendChild(nwPId);
+                    nwDiv.appendChild(nwPName);
+                    nwDiv.appendChild(nwPPrice);
+                    nwDiv.appendChild(nwPStock);
+                    nwDiv.appendChild(nwPMax);
+                    nwDiv.appendChild(nwPStar);
+                    nwDiv.appendChild(nwButton);
+                    nwDiv.appendChild(nwBr);
+
+                    nwDiv.style.cssText="border: 1px solid black;padding : padding-top: 1px;margin-bottom : 5px;width: 383px;background-color: #f2f2f2";
+
+                    idDivItem.appendChild(nwDiv);
+                    }
+                    
+
+                }
+                
+
+                
+
+               
+            } 
+
+            function fnButton(id)
+            {
+                var idCurrencyValue = document.getElementById("idCurrency").value;
+                var idCartHere = document.getElementById("idCart");
+                idCartHere.innerHTML = "";
+                console.log("in Button")
+                //console.log(id);
+                var count = 0;
+
+                //constructor
+                function oToCart(im,id,pr,qn,subt,name)
+                {
+                    this.image = im;
+                    this.id = id;
+                    this.price = pr;
+                    this.quantity = qn;
+                    this.subTotal = subt;
+                    this.name = name;
+                }
+
+                //loop
+                for(var i = 0; i<aData.length; i++)
+                { 
+                    
+                    //condition
+                    if((id == aData[i].id))
+                    {
+                        
+                        for(var j = 0; j<aCart.length; j++)
+                    {
+                        
+                            if(id== aCart[j].id)
+                           {
+                            var qCount = aQuantity[i]-aData[i].qty;
+                            //count setting
+                            if(qCount == 5)
+                            {
+                                console.log("equal to five " + aData[i].qty);
+                                aData[i].maxPer =" Purchased";
+                                
+                                
+                                
+                            }
+                             else
+                             { 
+                                aData[i].qty--;
+                                qCount = aQuantity[i]-aData[i].qty;// qty of purchase
+                                var subTotal = qCount *aCurrency[i];
+                                console.log(aCart[j]+ "quntity");
+                            
+                                aCart[j].quantity = qCount;
+                                aCart[j].subTotal = subTotal;
+                                aCart[j].price = aCurrency[i];
+                                
+                             }
+                             //incrementing count
+                             count++;
+                           }
+                            
+
+
+                        }
+
+                        if(count == 0)
+                        {
+                        aData[i].qty--;
+                        var qCount = aQuantity[i]-aData[i].qty;// qty of purchase
+                        var subTotal = qCount *aCurrency[i];//sub total
+                        console.log(qCount + "tot"+subTotal + "here in count");
+
+                        aCart.push(new oToCart(aData[i].image ,aData[i].id ,aCurrency[i] , qCount , subTotal, aData[i].name));
+                        }
+                        
+                        
+
+
+                    }
+                    
+                }
+                console.log(aCart);
+                //loop for display
+                for(var i =0; i<aCart.length;i++)
+                {   
+                    //new elements
+                    var nwImg = document.createElement("img");
+                    var nwCartDetailTop = document.createElement("p");
+                    var nwCartDiv = aCart[i].id+""+i;
+                    nwCartDiv = document.createElement("div");
+                    nwCartDivButton = document.createElement("div");
+                    var nwCartDetail = document.createElement("p");
+                    var nwButtonEdit =i+100;
+                    var nwButtonDelete = i+200;
+                    nwButtonEdit = document.createElement("button");
+                    nwButtonDelete = document.createElement("button");
+
+                    //style to the new elements
+                    nwCartDetailTop.style.cssText = "text-align: center; word-spacing: 50px;font-weight:bold;";
+                    nwCartDetail.style.cssText = "    padding-left: 15%;font-weight: bold;";
+    
+                    nwCartDiv.style.cssText = "border: 1px solid black;margin-bottom: 1px;";
+                    nwCartDivButton.style.cssText ="margin: 0px 0px";
+                    nwButtonEdit.style.cssText ="padding: 1px 13px;text-align: center; margin: 0% 1% 1% 15%;font-weight: bold;";
+                    nwButtonDelete.style.cssText="font-weight: bold;";
+                    nwImg.style.cssText ="width:60px; height:75px;float:right;margin: 3% 18% 0% 0%;";
+    
+                    //adding data
+                    nwButtonEdit.innerText = "Edit";
+                    nwButtonDelete.innerText ="Delete";
+                    nwCartDetailTop.innerText = "Id     Price    Qty    SubTotal";
+                    nwCartDetail.innerText = "ID: "+aCart[i].id + "\nPrice: "+aCart[i].price+" "+idCurrencyValue
+                    +"\nQuantity: " + aCart[i].quantity+"\n SubTotal :" + aCart[i].subTotal.toFixed(2)+" "+idCurrencyValue;
+                    nwButtonDelete.value = i+100;
+                    nwButtonEdit.value = i+100;
+                    nwImg.src = "images/"+aCart[i].image;
+                    //idCartHere.innerHTML += aCart[i].id + "  "+aCart[i].price+idCurrencyValue+" " + aCart[i].quantity+" " + aCart[i].subTotal.toFixed(2) + "<br><br>";
+                    
+                    nwButtonDelete.onclick = function() {fnButtondelete(this.value)};
+                    nwButtonEdit.onclick = function() {fnButtonEdit(this.value)};
+
+                    nwCartDivButton.appendChild(nwButtonEdit);
+                    nwCartDivButton.appendChild(nwButtonDelete);
+
+                    
+                    //nwCartDiv.appendChild(nwCartDetailTop);
+                    nwCartDiv.appendChild(nwImg);
+                    nwCartDiv.appendChild(nwCartDetail);
+                    
+                    nwCartDiv.appendChild(nwCartDivButton);
+                    
+
+
+                    idCartHere.appendChild(nwCartDiv);
+                }
+
+
+                //function calling
+                fnDisplayItem(); 
+                fnPrice();
+                count = 0;
+            }
+
+            //function for delete button
+            function fnButtondelete(id)
+            {
+                console.log(id);
+                var valueFromCart = id-100;
+                document.getElementById("idEdit").innerHTML ="";
+                console.log(aCart[valueFromCart].quantity+ "iddddd");
+                
+                //loop
+                for(var i =0; i<aData.length; i++)
+                {
+                    //condition
+                    if(aData[i].id ==aCart[valueFromCart].id)
+                    {
+                        console.log(aCart[valueFromCart].quantity+"iddd");
+                       aData[i].qty = (parseInt(aData[i].qty) + parseInt(aCart[valueFromCart].quantity));
+                        console.log(aData[i].qty+" iddd");
+                    }
+                }
+                
+                //removing element from array cart
+                aCart.splice(valueFromCart,1);//delete value from cart array
+
+                fnButton(); fnDisplayItem();
+            }
+
+            //fn for edit in cart
+            function fnButtonEdit(id)
+            {
+                var valueFromCart = id-100;
+
+                var idEditLocation = document.getElementById("idEdit");
+                idEditLocation.innerHTML = "";
+
+                //new element
+                var nwPTop = document.createElement("p");
+                var nwP = document.createElement("p");
+                var nwNumber = document.createElement("input");
+                var nwButton = document.createElement("button");
+                var nwBr = document.createElement("br");
+                var nwPError = document.createElement("p");
+                var nwImg = document.createElement("img");
+
+                //value to new elements
+                nwPTop.innerText = "You're editing:\n";
+                nwP.innerText = "Product id: "+ aCart[valueFromCart].id+"\n Product Name: "+ aCart[valueFromCart].name;
+                nwNumber.setAttribute("type", "number");
+                nwNumber.setAttribute("value", aCart[valueFromCart].quantity); 
+                nwImg.src = "images/" + aCart[valueFromCart].image;
+                nwNumber.setAttribute("Max", 5);
+                nwNumber.setAttribute("Min", 1);
+                nwButton.value = id;
+                nwButton.innerText ="Save Changes";
+
+                //style to new element
+                nwPTop.style.cssText = " text-align:center;font-weight:bold;";
+                nwP.style.cssText = "padding-left: 25%;";
+                nwNumber.style.cssText ="margin: 13px 0px 6px 0px;border: 1px solid black;padding-left:5px;";
+                nwImg.style.cssText ="width:60px; padding: 0% 12% 0% 27%; height:75px;float:left;";
+                nwButton.style.cssText= "margin-bottom: 30px;font-weight: bold;";
+
+                //function to the button
+                nwButton.onclick = function() {fnSaveChanges(this.value,nwNumber.value)};
+
+                //add to main div
+                idEditLocation.appendChild(nwPTop);
+                idEditLocation.appendChild(nwP);
+                idEditLocation.appendChild(nwImg);
+                
+                idEditLocation.appendChild(nwNumber);
+                idEditLocation.appendChild(nwBr);
+                idEditLocation.appendChild(nwButton);
+                
+
+            }
+
+            //fn for save changes
+            function fnSaveChanges(id,value)
+            {
+                //more than five
+                if(value>5)
+                {  
+                    var idEditLocation = document.getElementById("idEdit");
+                    var nwPError = document.createElement("p");
+                    nwPError.innerText = "Please enter the quantity 5 or less than 5.";
+                    idEditLocation.appendChild(nwPError);
+
+                }
+                else
+                {
+                document.getElementById("idEdit").innerHTML="";
+                console.log(id+value);
+                var id = id-100;
+
+                //loop for quantity
+                
+                for(var i =0 ; i<aData.length; i++)
+                {
+                    if(aData[i].id == aCart[id].id)
+                    {
+                        aData[i].qty = aQuantity[i] - value;
+                        aData[i].maxPer = 5;
+                        
+                        if(value ==5)
+                        {
+                            aData[i].maxPer = "Purchased";
+                        }
+                    }
+                }
+                aCart[id].quantity = value;
+                aCart[id].subTotal = value * aCart[id].price;
+                }
+                //function calling
+                fnButton(); 
+                fnDisplayItem();
+
+            }
+
+            //fn calling
+            fnCurrency();
+    </script>
+
+        
+
+
+</div>  
+</body>
+</html>
